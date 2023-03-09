@@ -47,60 +47,102 @@ app.use(express.static("public"));
 
 
 
-// for data insertion in checkin page
+// for USER LOGIN
 
+const bcrypt = require('bcrypt');
 
 app.post("/login",(req,res)=>{
     var email = req.body.email;
     var password = req.body.password;
 
-    var data = {
-        "email":email,
-        "password":password,
-    }
-
-  db.collection('users').insertOne(data,(err,collection)=>{
-    if(err){
+    // Find a user with the provided email in the database
+    db.collection('users').findOne({email: email}, (err, user) => {
+      if (err) {
         throw err;
-    }
-    console.log("Record inserted successfully");
-  });
+      }
 
-  return res.redirect('home.html')
-})
- 
+      if (!user) {
+        // If there is no user with the provided email, return an error message
+        return res.status(401).send("INVALID EMAIL OR PASSWORD");
+      }
+
+      // Compare the provided password with the hashed password in the database
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (err) {
+          throw err;
+        }
+
+        if (result === true) {
+          // If the password matches, redirect the user to the home page
+          return res.redirect('devices');
+        } else {
+          // If the password doesn't match, return an error message
+          return res.status(401).send("INVALID EMAIL OR PASSWORD");
+        }
+      });
+    });
+});
+
+ //FOR USER REGISTRATION
+
+ app.post("/register",(req,res)=>{
+  var email = req.body.email;
+  var password = req.body.password;
+
+  // Hash the password with bcrypt
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) {
+      throw err;
+    }
+
+    var data = {
+      "email":email,
+      "password": hash,
+    }
+
+    // Insert the user data into the database
+    db.collection('users').insertOne(data,(err,collection)=>{
+      if(err){
+          throw err;
+      }
+      console.log("Record inserted successfully");
+    });
+
+    // Redirect the user to the login page
+    return res.redirect('login.html');
+  });
+});
 
 // for Adding Certification records
 
 app.post("/add",(req,res)=>{
-    var name = req.body.name;
-    var certification = req.body.certification;
-    var planned = req.body.planned;
-    var registered = req.body.registered;
-    var cleared = req.body.cleared;
-    var completed = req.body.completed;
-    var comments = req.body.comments;
-  
-    var data = {
-         "name": name,
-         "certification":certification,
-         "planned":planned,
-         "registered":registered,
-         "cleared":cleared,
-         "completed":completed,
-         "comments":comments,
-         
-    }
-  
+  var name = req.body.name;
+  var certification = req.body.certification;
+  var planned = req.body.planned;
+  var registered = req.body.registered === "yes" ? "yes" : "no";
+  var cleared = req.body.cleared === "yes" ? "yes" : "no";
+  var completed = req.body.completed;
+  var comments = req.body.comments;
+
+  var data = {
+    "name": name,
+    "certification": certification,
+    "planned": planned,
+    "registered": registered,
+    "cleared": cleared,
+    "completed": completed,
+    "comments": comments,
+  }
+
   db.collection('newcert').insertOne(data,(err,collection)=>{
     if(err){
-        throw err;
+      throw err;
     }
     console.log("Record inserted");
   });
-  
+
   return res.redirect('devices');
-  })
+})
 
 //EJS FILE
 
@@ -145,7 +187,19 @@ app.post("/update", function(req, res, next) {
   }
 
   var name = req.body.name;
+  var certification = req.body.certification;
 
+  if (certification) {
+    db.collection("newcert").updateOne(
+      { name: name, certification: certification },
+      { $set: updateFields },
+      function(err, result) {
+        assert.equal(null, err);
+        console.log("Record updated");
+        client.close();
+      }
+    );
+  } else {
     db.collection("newcert").updateOne(
       { name: name },
       { $set: updateFields },
@@ -155,10 +209,10 @@ app.post("/update", function(req, res, next) {
         client.close();
       }
     );
-    return res.redirect("devices");
-  });
- 
+  }
 
+  return res.redirect("devices");
+});
 
 
 
@@ -166,8 +220,9 @@ app.post("/update", function(req, res, next) {
 
 app.post("/delete", function(req, res, next){
     var name = req.body.name;
+    var certification = req.body.certification;
 
-        db.collection('newcert').deleteOne({"name":name}, function(err, result){
+        db.collection('newcert').deleteOne({"name":name},{"certification":certification}, function(err, result){
             assert.equal(null, err);
             console.log('Record deleted');
             client.close();
