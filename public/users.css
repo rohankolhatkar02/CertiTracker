@@ -1,0 +1,26 @@
+
+
+body {
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 400;
+    color: #000;
+    height: 100%;
+    font-size: 1rem;
+    line-height: 1.65;
+    background-color:rgb(255, 255, 255);
+    word-wrap: break-word;
+    margin: 0; /* reset */
+}
+
+div.container_orders {
+    background-image:url("logomenu.png");
+    background-repeat: no-repeat;
+    text-align: center;
+    background-color: #000000;
+    box-shadow: 5px 5px 7px 5px #ff1212;
+    position: absolute;
+    top: 270px;
+    right: 300px;
+    width: 550px;
+    height: 500px;
+  }
