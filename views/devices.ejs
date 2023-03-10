@@ -96,7 +96,7 @@ input[type="reset"]:hover {
     
     <!--FORM FOR ADDITION-->
 
-    <h1><u>Add Certifications</u></h1> 
+    <h1><u>Add/Update Certifications</u></h1> 
     <form action="/add" method="POST">
       <table class="excel-table">
         <tr>
@@ -114,14 +114,14 @@ input[type="reset"]:hover {
           <td><input type="date" name="planned" /></td>
           <td>
             <select name="registered">
-              <option value="">--Select--</option>
+              <option value="">-Select-</option>
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
           </td>
           <td>
             <select name="cleared">
-              <option value="">--Select--</option>
+              <option value="">-Select-</option>
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
@@ -134,9 +134,6 @@ input[type="reset"]:hover {
       <input type="submit" value="Add Records" formaction="/add"/>
       <input type="submit" value="Update Records" formaction="/update"/>
       <input type="reset" value="Reset" />
-      <br />
-      <br />
-      <input type="submit" value="Delete Records" formaction="/delete">
     </form>
     
   <!-- FORM FOR UPDATION -->
@@ -168,19 +165,20 @@ input[type="reset"]:hover {
   </form> -->
 
    <!-- FORM FOR DELETION -->
-   <!-- <h1><u>Delete Certifications</u></h1> 
+  <h1><u>Delete Certifications</u></h1> 
    <form action="/delete" method="POST">        
      <table class="excel-table">
        <tr>
          <th>Name</th>
+         <th>Certification</th>
        </tr>
        <tr>
          <td><input type="text" name="name" /></td>
+         <td><input type="text" name="certification" /></td>
        </tr>
      </table>
      <br>
-     <input type="submit" value="Submit" />
-     <input type="reset" value="Reset" />
-   </form> -->
+     <input type="submit" value="Delete Records">
+   </form> 
   </body>
 </html>

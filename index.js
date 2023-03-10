@@ -14,6 +14,7 @@ const assert = require('assert');
 const { callbackify } = require('util');
 
 const path = require('path');
+const bcrypt = require('bcrypt');
 
 app.set('view engine', 'ejs');
 
@@ -49,7 +50,7 @@ app.use(express.static("public"));
 
 // for USER LOGIN
 
-const bcrypt = require('bcrypt');
+
 
 app.post("/login",(req,res)=>{
     var email = req.body.email;
@@ -219,17 +220,25 @@ app.post("/update", function(req, res, next) {
 /*Delete Function*/
 
 app.post("/delete", function(req, res, next){
-    var name = req.body.name;
-    var certification = req.body.certification;
+  var name = req.body.name;
+  var certification = req.body.certification;
 
-        db.collection('newcert').deleteOne({"name":name},{"certification":certification}, function(err, result){
-            assert.equal(null, err);
-            console.log('Record deleted');
-            client.close();
-            return res.redirect('devices')
-        });
-    });
-
+  if (certification) {
+      db.collection('newcert').deleteOne({"name":name, "certification":certification}, function(err, result){
+          assert.equal(null, err);
+          console.log('Record deleted');
+          client.close();
+          return res.redirect('devices')
+      });
+  } else {
+      db.collection('newcert').deleteOne({"name":name}, function(err, result){
+          assert.equal(null, err);
+          console.log('Record deleted');
+          client.close();
+          return res.redirect('devices')
+      });
+  }
+});
 
 
 //for Kitchen Display page
