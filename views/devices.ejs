@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <title>Inspirit Vision-Certifications</title>
   </head>
@@ -51,6 +52,9 @@ input[type="submit"]:hover,
 input[type="reset"]:hover {
   background-color: #7a1ff3;
 }
+.clickable-cell:hover {
+  cursor: pointer;
+}
 
   </style>
   <body>
@@ -79,12 +83,12 @@ input[type="reset"]:hover {
                 <% if (index > 0) { %>
                 <tr>
                 <% } %>
-                <td><%= device.certification %></td>
-                <td><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
-                <td><%= device.registered %></td>
-                <td><%= device.cleared %></td>
-                <td><% if (device.completed) { %><%= new Date(device.completed).toLocaleDateString() %><% } else { %>-<% } %></td>
-                <td><%= device.comments %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.certification %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.registered %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.cleared %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.completed) { %><%= new Date(device.completed).toLocaleDateString() %><% } else { %>-<% } %></td>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.comments %></td>
                 <% if (index > 0) { %>
                 </tr>
                 <% } %>
@@ -92,6 +96,18 @@ input[type="reset"]:hover {
          </tr>
       <% }); %>
     </table>
+    
+    <script>
+      const clickableCells = document.querySelectorAll(".clickable-cell");
+      clickableCells.forEach(cell => {
+        cell.addEventListener("click", () => {
+          const deviceId = cell.getAttribute("data-deviceid");
+          window.location.href = `/devices/${deviceId}`;
+        });
+      });
+    </script>
+    
+
     
     
     <!--FORM FOR ADDITION-->
@@ -180,5 +196,23 @@ input[type="reset"]:hover {
      <br>
      <input type="submit" value="Delete Records">
    </form> 
+
+   <!--HTML FORM FOR REGISTERING USERS-->
+   <h1><u>Register a new user</u></h1>
+   <form method="POST" action="/register">
+     <table class="excel-table">
+       <tr>
+         <td><label for="email">Email:</label></td>
+         <td><input type="email" id="email" name="email" autocomplete="off" required="true" placeholder="Enter your email"></td>
+       </tr>
+       <tr>
+         <td><label for="password">Password:</label></td>
+         <td><input type="password" id="password" name="password" required="true"></td>
+       </tr>
+     </table>
+     <br>
+     <input type="submit" value="Register">
+   </form>
+   
   </body>
 </html>

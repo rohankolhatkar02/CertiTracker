@@ -240,6 +240,23 @@ app.post("/delete", function(req, res, next){
   }
 });
 
+app.get('/devices/:id', function(req, res) {
+  // Get the device ID from the request parameters
+  var deviceId = req.params.id;
+  
+  // Retrieve the device from the database using the ID
+  MyModel.findById(deviceId, function(err, device) {
+    if (err) {
+      // Handle errors
+      console.log(err);
+      res.status(500).send('Error retrieving device');
+    } else {
+      // Render the device details page with the retrieved device data
+      res.render('device-details', { device: device });
+    }
+  });
+});
+
 
 //for Kitchen Display page
 
