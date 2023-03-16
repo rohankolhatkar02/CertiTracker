@@ -6,20 +6,44 @@
 </head>
 <body>
     <h1><%= device.name %></h1>
-    <form action="/update" method="POST">
-        <label for="certification">Certification:</label>
-        <input type="text" id="certification" name="certification" value="<%= device.certification %>"><br>
-        <label for="planned">Planned:</label>
-        <input type="date" id="planned" name="planned" value="<% if (device.planned) { %><%= new Date(device.planned).toISOString().substr(0, 10) %><% } else { %>-<% } %>"><br>
-        <label for="registered">Registered:</label>
-        <input type="text" id="registered" name="registered" value="<%= device.registered %>"><br>
-        <label for="cleared">Cleared:</label>
-        <input type="text" id="cleared" name="cleared" value="<%= device.cleared %>"><br>
-        <label for="completed">Completed:</label>
-        <input type="date" id="completed" name="completed" value="<% if (device.completed) { %><%= new Date(device.completed).toISOString().substr(0, 10) %><% } else { %>-<% } %>"><br>
-        <label for="comments">Comments:</label>
-        <input type="text" id="comments" name="comments" value="<%= device.comments %>"><br>
-        <button type="submit">Save Changes</button>
+    <form method="POST" action="/devices/<%= device.id %>">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="<%= device.name %>" readonly>
+      </div>
+      <div class="form-group">
+        <label for="certification">Certification</label>
+        <input type="text" class="form-control" id="certification" name="certification" value="<%= device.certification %>" readonly>
+      </div>
+      <div class="form-group">
+        <label for="planned">Planned</label>
+        <input type="date" class="form-control" id="planned" name="planned" value="<%= device.planned ? device.planned.toISOString().substring(0, 10) : '' %>">
+      </div>
+      <div class="form-group">
+        <label for="registered">Registered</label>
+        <select class="form-control" id="registered" name="registered">
+          <option value="">-Select-</option>
+          <option value="yes" <%= device.registered === 'yes' ? 'selected' : '' %>>Yes</option>
+          <option value="no" <%= device.registered === 'no' ? 'selected' : '' %>>No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="cleared">Cleared</label>
+        <select class="form-control" id="cleared" name="cleared">
+          <option value="">-Select-</option>
+          <option value="yes" <%= device.cleared === 'yes' ? 'selected' : '' %>>Yes</option>
+          <option value="no" <%= device.cleared === 'no' ? 'selected' : '' %>>No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="completed">Completed</label>
+        <input type="date" class="form-control" id="completed" name="completed" value="<%= device.completed ? device.completed.toISOString().substring(0, 10) : '' %>">
+      </div>
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea class="form-control" id="comments" name="comments" rows="3"><%= device.comments %></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
     </form>
     <a href="/devices">Back to devices list</a>
     <script>
@@ -33,14 +57,14 @@
                 payload[key] = value;
             }
             const res = await fetch(`/devices/${deviceId}`, {
-                method: 'PATCH',
+                method: 'post',
                 body: JSON.stringify(payload),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             if (res.ok) {
-                window.location.href = `/devices/${deviceId}`;
+               window.location.href = `/devices/${deviceId}`;
             }
         });
     </script>

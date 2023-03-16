@@ -117,6 +117,7 @@ app.post("/login",(req,res)=>{
 // for Adding Certification records
 
 app.post("/add",(req,res)=>{
+  var employeeId = req.body.employeeId;
   var name = req.body.name;
   var certification = req.body.certification;
   var planned = req.body.planned;
@@ -126,6 +127,7 @@ app.post("/add",(req,res)=>{
   var comments = req.body.comments;
 
   var data = {
+    "employeeId": employeeId,
     "name": name,
     "certification": certification,
     "planned": planned,
@@ -160,7 +162,7 @@ app.get('/devices', function(req, res) {
 
 /*Update function*/
 
-app.post("/update", function(req, res, next) {
+app.post("/update", function(req, res) {
   var updateFields = {};
 
   if (req.body.certification) {
@@ -215,6 +217,121 @@ app.post("/update", function(req, res, next) {
   return res.redirect("devices");
 });
 
+/*UPDATE FUNCTION FOR DEVICE_DETAILS.EJS */
+
+app.post('/devices/:id', async (req, res) => {
+  try {
+    const device = await MyModel.findById(req.params.id);
+    if (!device) {
+      return res.status(404).send('Device not found');
+    }
+
+    const updateFields = {};
+    if (req.body.name) updateFields.name = req.body.name;
+    if (req.body.certification) updateFields.certification = req.body.certification;
+    if (req.body.planned) updateFields.planned = req.body.planned;
+    if (req.body.registered) updateFields.registered = req.body.registered;
+    if (req.body.cleared) updateFields.cleared = req.body.cleared;
+    if (req.body.completed) updateFields.completed = req.body.completed;
+    if (req.body.comments) updateFields.comments = req.body.comments;
+
+    await MyModel.updateOne({ _id: device._id }, { $set: updateFields });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+// app.patch("/devices/<%= device.id %>", function(req, res, next) {
+//   var updateFields = {};
+
+//   if (req.body.certification) {
+//     updateFields.certification = req.body.certification;
+//   }
+
+//   if (req.body.planned) {
+//     updateFields.planned = req.body.planned;
+//   }
+
+//   if (req.body.registered) {
+//     updateFields.registered = req.body.registered;
+//   }
+
+//   if (req.body.cleared) {
+//     updateFields.cleared = req.body.cleared;
+//   }
+
+//   if (req.body.completed) {
+//     updateFields.completed = req.body.completed;
+//   }
+
+//   if (req.body.comments) {
+//     updateFields.comments = req.body.comments;
+//   }
+
+//   var name = req.body.name;
+//   var certification = req.body.certification;
+
+//   if (certification) {
+//     db.collection("newcert").updateOne(
+//       { name: name, certification: certification },
+//       { $set: updateFields },
+//       function(err, result) {
+//         if (err) {
+//           return next(err);
+//         }
+//         console.log("Record updated");
+//         res.redirect("/devices");
+//       }
+//     );
+//   } else {
+//     db.collection("newcert").updateOne(
+//       { name: name },
+//       { $set: updateFields },
+//       function(err, result) {
+//         if (err) {
+//           return next(err);
+//         }
+//         console.log("Record updated");
+//         res.redirect("/devices");
+//       }
+//     );
+//   }
+// });
+
+// POST request to update a device record
+// app.put('/devices/:id', (req, res) => {
+//   const id = req.params.id;
+//   const updatedData = req.body;
+
+//   MyModel.findByIdAndUpdate(id, updatedData, {new: true})
+//     .then(device => {
+//       res.redirect(`/devices/${device._id}`);
+//     })
+//     .catch(error => {
+//       console.log(error);
+//       res.send('An error occurred while updating the device.');
+//     });
+// });
+
+app.get('/devices/:id', function(req, res) {
+  // Get the device ID from the request parameters
+  var deviceId = req.params.id;
+  
+  // Retrieve the device from the database using the ID
+  MyModel.findById(deviceId, function(err, device) {
+    if (err) {
+      // Handle errors
+      console.log(err);
+      res.status(500).send('Error retrieving device');
+    } else {
+      // Render the device details page with the retrieved device data
+      res.render('device-details', { device: device });
+    }
+  });
+});
 
 
 /*Delete Function*/
@@ -239,42 +356,6 @@ app.post("/delete", function(req, res, next){
       });
   }
 });
-
-app.get('/devices/:id', function(req, res) {
-  // Get the device ID from the request parameters
-  var deviceId = req.params.id;
-  
-  // Retrieve the device from the database using the ID
-  MyModel.findById(deviceId, function(err, device) {
-    if (err) {
-      // Handle errors
-      console.log(err);
-      res.status(500).send('Error retrieving device');
-    } else {
-      // Render the device details page with the retrieved device data
-      res.render('device-details', { device: device });
-    }
-  });
-});
-
-
-//for Kitchen Display page
-
-
-
-//app.get('/devices',(req,res) =>{
-   // let device_list = [{'name':'dht22'},{'name':'temp36'}]
-     //const db = client.db(dbName);
-     //const collection = db.collection('order');
-   //  collection.find({}).toArray(function(err,user_list){
-     //    assert.equal(err,null);
-  //       res.render('devices')
-         //,{'users': user_list})
-     //});
- //})
-
-// for Connection to LocalHost
-
 
 
 app.get("/",(req,res)=>{

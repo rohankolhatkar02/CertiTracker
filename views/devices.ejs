@@ -61,28 +61,30 @@ input[type="reset"]:hover {
     <h1><u>Inspirit Vision-Employee Certifications</u></h1>
     <table class="excel-table">
       <tr>
+        <th>Employee ID</th>
         <th>Name</th>
         <th>Certification</th>
         <th>Planned</th>
         <th>Registered</th>
         <th>Cleared</th>
-        <th>Completed</th>
+        <th>Completion Date</th>
         <th>Comments</th>
       </tr>
       <% var group = {}; %>
       <% devices.forEach(function(device) {
-            if (!group[device.name]) {
-                group[device.name] = [];
+            if (!group[device.employeeId]) {
+                group[device.employeeId] = [];
             }
-            group[device.name].push(device);
+            group[device.employeeId].push(device);
          });
-         Object.keys(group).forEach(function(name) { %>
+         Object.keys(group).forEach(function(employeeId) { %>
          <tr>
-            <td rowspan="<%= group[name].length %>"><%= name %></td>
-            <% group[name].forEach(function(device, index) { %>
+            <td rowspan="<%= group[employeeId].length %>"><%= employeeId %></td>
+            <% group[employeeId].forEach(function(device, index) { %>
                 <% if (index > 0) { %>
                 <tr>
                 <% } %>
+                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.name %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.certification %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.registered %></td>

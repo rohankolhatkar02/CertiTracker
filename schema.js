@@ -17,11 +17,11 @@ const MyModelSchema = new mongoose.Schema({
   },
   registered: {
     type: String,
-    enum: ['Yes', 'No']
+    enum: ['yes', 'no']
   },
   cleared: {
     type: String,
-    enum: ['Yes', 'No']
+    enum: ['yes', 'no']
   },
   completed: {
     type: Date,
