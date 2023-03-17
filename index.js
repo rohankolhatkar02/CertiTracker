@@ -266,7 +266,7 @@ app.post('/devices/:id', async (req, res) => {
 //   if (req.body.completed) {
 //     updateFields.completed = req.body.completed;
 //   }
-
+//jhvbjhbdsvjhsdbjyhbsdjkvbsjdbvjhbsdvjhbsdvjhbsdjkvbjksdhglvjb
 //   if (req.body.comments) {
 //     updateFields.comments = req.body.comments;
 //   }
