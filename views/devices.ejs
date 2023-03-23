@@ -4,64 +4,236 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <title>Inspirit Vision-Certifications</title>
+    <script>
+      $(document).ready(function() {
+        $('#add-record-btn').click(function() {
+          $('.add-record-form').toggle();
+        });
+      });
+      $(document).ready(function() {
+        $('.delete-record-btn').click(function() {
+          $('.delete-record-form').toggle();
+        });
+      });
+      $(document).ready(function() {
+        $('.register-user-btn').click(function() {
+          $('.register-user-form').toggle();
+        });
+      });
+
+    </script>
   </head>
   <style>
+
+
+    .navbar {
+      background-color: #eeeded;
+      color: #fff;
+      padding: 10px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar li {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      padding: 5px;
+      border-radius: 5px;
+      float: left;
+      text-align: center;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .navbar a:hover {
+      background-color: #fff;
+      color: #333;
+    }
+
     body {
-  background-color: #ffffff;
-}
+      background-color: #ffffff;
+    }
 
     .excel-table {
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  justify-content: center;
-  align-items: center;  
-}
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      justify-content: center;
+      align-items: center;  
+    }
 
-.excel-table td, .excel-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
+    .excel-table td, .excel-table th {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
 
-.excel-table th {
-  background-color: #7800ce;
-  color: white;
-  font-weight: bold;
-}
+    .excel-table th {
+      background-color: #7800ce;
+      color: white;
+      font-weight: bold;
+    }
 
-.excel-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-input[type="submit"], input[type="reset"]  {
-  background-color: #7800ce;
-  border: none;
-  color: white;
-  padding: 10px 18px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
- 
-}
+    .excel-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
 
-input[type="submit"]:hover,
-input[type="reset"]:hover {
-  background-color: #7a1ff3;
-}
-.clickable-cell:hover {
-  cursor: pointer;
-}
+    input[type="submit"], input[type="reset"]  {
+      background-color: #7800ce;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
+    input[type="submit"]:hover,
+    input[type="reset"]:hover {
+      background-color: #7a1ff3;
+    }
+
+    .clickable-cell:hover {
+      cursor: pointer;
+    }
+    /*delete record form styles*/
+    .delete-record-form {
+      display: none;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+    }
+    /*register new user form styles*/
+    .register-user-form {
+      display: none;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+    }
+    /* add record form styles */
+    .add-record-form {
+      display: none;
+      padding: 20px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+    }
+
+    /* form input styles */
+    input[type=text], input[type=date], select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+  .delete-record-btn {
+    margin-left: 2%;
+  }
+
+  .register-user-btn{
+    margin-left:2%;
+  }
   </style>
-  <body>
-    <h1><u>Inspirit Vision-Employee Certifications</u></h1>
+  <body> 
+    <nav class="navbar">
+      <h2 style="color:#000000"><u>IV-EMPLOYEE CERTIFICATIONS</u></h2>
+      <button class="navbar-btn add-record-btn" id="add-record-btn">Add Record</button>
+      <button class="navbar-btn delete-record-btn">Delete Record</button>
+      <button class="navbar-btn register-user-btn">Register a New User</button>
+      <br />
+      <br />
+    </nav>
+    <div class="add-record-form-container">
+      <form class="add-record-form" action="/add" method="POST">
+        <table class="excel-table">
+          <tr>
+            <th>Name</th>
+            <th>Certification</th>
+            <th>Planned</th>
+            <th>Registered</th>
+            <th>Cleared</th>
+            <th>Completed</th>
+            <th>Comments</th>
+          </tr>
+          <tr>
+            <td><input type="text" name="name" /></td>
+            <td><input type="text" name="certification" /></td>
+            <td><input type="date" name="planned" /></td>
+            <td>
+              <select name="registered">
+                <option value="">-Select-</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </td>
+            <td>
+              <select name="cleared">
+                <option value="">-Select-</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </td>
+            <td><input type="date" name="completed" /></td>
+            <td><input type="text" name="comments" /></td>
+          </tr>
+        </table>
+        <br>
+        <input type="submit" value="Add Record"/>
+        <input type="reset" value="Clear" />
+      </form>
+    </div>
+    <div class="delete-record-form-container">
+      <form class="delete-record-form" action="/delete" method="POST">
+        <table class="excel-table">
+          <tr>
+            <th>Name</th>
+            <th>Certification</th>
+          </tr>
+          <tr>
+            <td><input type="text" name="name" /></td>
+            <td><input type="text" name="certification" /></td>
+          </tr>
+        </table>
+        <br>
+        <input type="submit" value="Delete Records">
+      </form>
+    </div>
+    <div class="register-user-form-container">
+      <form class="register-user-form" method="POST" action="/register">
+        <table class="excel-table">
+          <tr>
+            <td><label for="email">Email:</label></td>
+            <td><input type="email" id="email" name="email" autocomplete="off" required="true" placeholder="Enter employee email"></td>
+          </tr>
+          <tr>
+            <td><label for="password">Password:</label></td>
+            <td><input type="password" id="password" name="password" placeholder="Enter password" required="true"></td>
+          </tr>
+        </table>
+        <br>
+        <input type="submit" value="Register">
+    </div>
     <table class="excel-table">
       <tr>
-        <th>Employee ID</th>
         <th>Name</th>
         <th>Certification</th>
         <th>Planned</th>
@@ -72,19 +244,18 @@ input[type="reset"]:hover {
       </tr>
       <% var group = {}; %>
       <% devices.forEach(function(device) {
-            if (!group[device.employeeId]) {
-                group[device.employeeId] = [];
+            if (!group[device.name]) {
+                group[device.name] = [];
             }
-            group[device.employeeId].push(device);
+            group[device.name].push(device);
          });
-         Object.keys(group).forEach(function(employeeId) { %>
+         Object.keys(group).forEach(function(name) { %>
          <tr>
-            <td rowspan="<%= group[employeeId].length %>"><%= employeeId %></td>
-            <% group[employeeId].forEach(function(device, index) { %>
+            <td rowspan="<%= group[name].length %>"><%= name %></td>
+            <% group[name].forEach(function(device, index) { %>
                 <% if (index > 0) { %>
                 <tr>
                 <% } %>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.name %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.certification %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
                 <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.registered %></td>
@@ -107,100 +278,10 @@ input[type="reset"]:hover {
           window.location.href = `/devices/${deviceId}`;
         });
       });
-    </script>
-    
 
-    
-    
-    <!--FORM FOR ADDITION-->
-
-    <h1><u>Add/Update Certifications</u></h1> 
-    <form action="/add" method="POST">
-      <table class="excel-table">
-        <tr>
-          <th>Name</th>
-          <th>Certification</th>
-          <th>Planned</th>
-          <th>Registered</th>
-          <th>Cleared</th>
-          <th>Completed</th>
-          <th>Comments</th>
-        </tr>
-        <tr>
-          <td><input type="text" name="name" /></td>
-          <td><input type="text" name="certification" /></td>
-          <td><input type="date" name="planned" /></td>
-          <td>
-            <select name="registered">
-              <option value="">-Select-</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </td>
-          <td>
-            <select name="cleared">
-              <option value="">-Select-</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </td>
-          <td><input type="date" name="completed" /></td>
-          <td><input type="text" name="comments" /></td>
-        </tr>
-      </table>
-      <br>
-      <input type="submit" value="Add Records" formaction="/add"/>
-      <input type="submit" value="Update Records" formaction="/update"/>
-      <input type="reset" value="Reset" />
-    </form>
-    
-  <!-- FORM FOR UPDATION -->
-  <!-- <h1><u>Update Certifications</u></h1> 
-  <form action="/update" method="POST">
-    <table class="excel-table">
-      <tr>
-        <th>Name</th>
-        <th>Certification</th>
-        <th>Planned</th>
-        <th>Registered</th>
-        <th>Cleared</th>
-        <th>Completed</th>
-        <th>Comments</th>
-      </tr>
-      <tr>
-        <td><input type="text" name="name" /></td>
-        <td><input type="text" name="certification" /></td>
-        <td><input type="date" name="planned" /></td>
-        <td><input type="text" name="registered" /></td>
-        <td><input type="text" name="cleared" /></td>
-        <td><input type="date" name="completed" /></td>
-        <td><input type="text" name="comments" /></td>
-      </tr>
-    </table>
-    <br>
-    <input type="submit" value="Submit" />
-    <input type="reset" value="Reset" />
-  </form> -->
-
-   <!-- FORM FOR DELETION -->
-  <h1><u>Delete Certifications</u></h1> 
-   <form action="/delete" method="POST">        
-     <table class="excel-table">
-       <tr>
-         <th>Name</th>
-         <th>Certification</th>
-       </tr>
-       <tr>
-         <td><input type="text" name="name" /></td>
-         <td><input type="text" name="certification" /></td>
-       </tr>
-     </table>
-     <br>
-     <input type="submit" value="Delete Records">
-   </form> 
-
+</script>
    <!--HTML FORM FOR REGISTERING USERS-->
-   <h1><u>Register a new user</u></h1>
+   <!-- <h1><u>Register a new user</u></h1>
    <form method="POST" action="/register">
      <table class="excel-table">
        <tr>
@@ -214,7 +295,7 @@ input[type="reset"]:hover {
      </table>
      <br>
      <input type="submit" value="Register">
-   </form>
+   </form> -->
    
   </body>
 </html>

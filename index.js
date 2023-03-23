@@ -117,7 +117,6 @@ app.post("/login",(req,res)=>{
 // for Adding Certification records
 
 app.post("/add",(req,res)=>{
-  var employeeId = req.body.employeeId;
   var name = req.body.name;
   var certification = req.body.certification;
   var planned = req.body.planned;
@@ -127,7 +126,6 @@ app.post("/add",(req,res)=>{
   var comments = req.body.comments;
 
   var data = {
-    "employeeId": employeeId,
     "name": name,
     "certification": certification,
     "planned": planned,
@@ -357,6 +355,9 @@ app.post("/delete", function(req, res, next){
   }
 });
 
+app.listen(4000, '0.0.0.0', () => {
+  console.log('Server is listening on port 4000');
+});
 
 app.get("/",(req,res)=>{
    res.set({

@@ -6,14 +6,14 @@
 </head>
 <body>
     <h1><%= device.name %></h1>
-    <form method="POST" action="/devices/<%= device.id %>">
+    <form method="POST" action="/devices/<%= device.id %>">  
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" name="name" value="<%= device.name %>" readonly>
+        <input type="text" class="form-control" id="name" name="name" value="<%= device.name %>">
       </div>
       <div class="form-group">
         <label for="certification">Certification</label>
-        <input type="text" class="form-control" id="certification" name="certification" value="<%= device.certification %>" readonly>
+        <input type="text" class="form-control" id="certification" name="certification" value="<%= device.certification %>">
       </div>
       <div class="form-group">
         <label for="planned">Planned</label>
@@ -44,8 +44,8 @@
         <textarea class="form-control" id="comments" name="comments" rows="3"><%= device.comments %></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
+      <a href="/devices" style="align-self:flex-start;">Back to devices list</a>
     </form>
-    <a href="/devices">Back to devices list</a>
     <script>
         const form = document.querySelector('form');
         const deviceId = '<%= device._id %>';
@@ -76,7 +76,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   background: #f9faff;
   color: #3a3c47;
-  line-height: 1.6;
+  line-height: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,14 +84,19 @@ body {
   padding: 0;
 }
 
+a{
+  font-size:large;
+}
+
 h1 {
   margin-top: 48px;
 }
 
 form {
-  background: #fff;
+  background: #ffffff;
   max-width: 360px;
   width: 100%;
+  max-height: 300px;
   padding: 58px 44px;
   border: 1px solid #e1e2f0;
   border-radius: 4px;
@@ -133,8 +138,8 @@ button {
   width: 100%;
   padding: 12px;
   font-size: 18px;
-  background: #15C39A;
-  color: #fff;
+  background: #3916da;
+  color: #ffffff;
   border: none;
   border-radius: 100px;
   cursor: pointer;
@@ -144,7 +149,7 @@ button {
 }
 
 button:hover {
-  background: #55D3AC;
+  background: #7639ef;
 }
 
 @media(max-width: 458px) {
