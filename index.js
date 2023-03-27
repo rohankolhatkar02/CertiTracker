@@ -9,6 +9,15 @@ const MyModel=require('./schema.js');
 
 const dbName = 'rohan';
 
+const router = express.Router();
+
+const nameSchema = new mongoose.Schema({
+  name: String
+});
+
+
+const Name = mongoose.model('Name', nameSchema);
+
 const client = new MongoClient(url);
 const assert = require('assert');
 const { callbackify } = require('util');
@@ -46,7 +55,17 @@ db.once('open',()=>console.log("Connected to Database"))
 
 app.use(express.static("public"));
 
+router.get('/names', async (req, res) => {
+  try {
+    const names = await Name.find();
+    res.json(names);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
 
+module.exports = router;
 
 // for USER LOGIN
 
@@ -158,6 +177,7 @@ app.get('/devices', function(req, res) {
   });
 });
 
+
 /*Update function*/
 
 app.post("/update", function(req, res) {
@@ -241,79 +261,6 @@ app.post('/devices/:id', async (req, res) => {
 });
 
 
-
-// app.patch("/devices/<%= device.id %>", function(req, res, next) {
-//   var updateFields = {};
-
-//   if (req.body.certification) {
-//     updateFields.certification = req.body.certification;
-//   }
-
-//   if (req.body.planned) {
-//     updateFields.planned = req.body.planned;
-//   }
-
-//   if (req.body.registered) {
-//     updateFields.registered = req.body.registered;
-//   }
-
-//   if (req.body.cleared) {
-//     updateFields.cleared = req.body.cleared;
-//   }
-
-//   if (req.body.completed) {
-//     updateFields.completed = req.body.completed;
-//   }
-//jhvbjhbdsvjhsdbjyhbsdjkvbsjdbvjhbsdvjhbsdvjhbsdjkvbjksdhglvjb
-//   if (req.body.comments) {
-//     updateFields.comments = req.body.comments;
-//   }
-
-//   var name = req.body.name;
-//   var certification = req.body.certification;
-
-//   if (certification) {
-//     db.collection("newcert").updateOne(
-//       { name: name, certification: certification },
-//       { $set: updateFields },
-//       function(err, result) {
-//         if (err) {
-//           return next(err);
-//         }
-//         console.log("Record updated");
-//         res.redirect("/devices");
-//       }
-//     );
-//   } else {
-//     db.collection("newcert").updateOne(
-//       { name: name },
-//       { $set: updateFields },
-//       function(err, result) {
-//         if (err) {
-//           return next(err);
-//         }
-//         console.log("Record updated");
-//         res.redirect("/devices");
-//       }
-//     );
-//   }
-// });
-
-// POST request to update a device record
-// app.put('/devices/:id', (req, res) => {
-//   const id = req.params.id;
-//   const updatedData = req.body;
-
-//   MyModel.findByIdAndUpdate(id, updatedData, {new: true})
-//     .then(device => {
-//       res.redirect(`/devices/${device._id}`);
-//     })
-//     .catch(error => {
-//       console.log(error);
-//       res.send('An error occurred while updating the device.');
-//     });
-// });
-
 app.get('/devices/:id', function(req, res) {
   // Get the device ID from the request parameters
   var deviceId = req.params.id;
@@ -352,6 +299,20 @@ app.post("/delete", function(req, res, next){
           client.close();
           return res.redirect('devices')
       });
+  }
+});
+
+
+// create a route to handle AJAX requests for names
+app.get('/names', async (req, res) => {
+  try {
+    // fetch all the names from MongoDB
+    const names = await Name.find({});
+    // send the names to the client-side
+    res.send(names);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
   }
 });
 
