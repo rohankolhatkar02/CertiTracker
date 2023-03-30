@@ -30,8 +30,13 @@ const MyModelSchema = new mongoose.Schema({
   comments: {
     type: String,
     default: null
-  }
-},{ collection: 'newcert' });
+  },
+  validity: {
+    type: Date,
+    default: null
+  },
+  },
+{ collection: 'newcert' });
 
 const MyModel = mongoose.model('MyModel', MyModelSchema);
 

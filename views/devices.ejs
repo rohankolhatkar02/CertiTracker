@@ -3,7 +3,7 @@
   <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
-    <title>Inspirit Vision-Certifications</title>
+    <title> Inspirit Vision-Certifications</title>
     <script>
       $(function() {
         $("#nameInput").on('input', function() {
@@ -19,6 +19,26 @@
               select.append($('<option>', {
                 value: name,
                 text: name
+              }));
+            });
+          });
+        });
+        
+        
+
+        $("#certificationInput").on('input', function() {
+          var inputVal = $(this).val();
+          $.get("/searchCertifications?certification=" + inputVal, function(data) {
+            var select = $('select[name="certification"]');
+            select.empty();
+            select.append($('<option>', {
+              value: '',
+              text: '-Select Certification-'
+            }));
+            data.forEach(function(certification) {
+              select.append($('<option>', {
+                value: certification,
+                text: certification
               }));
             });
           });
@@ -210,6 +230,7 @@ select[name="name"] {
             <th>Cleared</th>
             <th>Completed</th>
             <th>Comments</th>
+            <th>Validity</th>
           </tr>
           <tr>
             <td>
@@ -248,9 +269,44 @@ select[name="name"] {
                     .catch(err => console.error(err));
                 </script>
               </select>
-              
             </td>
-            <td><input type="text" name="certification" /></td>
+            <td>
+              <select name="certification" id="certificationInput">
+                <option></option>
+                <script>
+                  $(function() {
+                    $("#certificationInput").autocomplete({
+                      source: function(request, response) {
+                        $.ajax({
+                          url: "/getCertifications",
+                          data: {
+                            term: request.term
+                          },
+                          success: function(data) {
+                            response(data);
+                          }
+                        });
+                      },
+                      minLength: 1,
+                      autoFocus: true // set autoFocus to false to prevent auto-focusing on first item
+                    });
+                  });
+                </script>
+                <script>
+                  fetch('/certificationnames')
+                    .then(res => res.json())
+                    .then(names => {
+                      names.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name.certification;
+                        option.textContent = name.certification;
+                        document.querySelector('select[name="certification"]').appendChild(option);
+                      });
+                    })
+                    .catch(err => console.error(err));
+                </script>
+              </select>
+            </td>
             <td><input type="date" name="planned" /></td>
             <td>
               <select name="registered">
@@ -268,6 +324,7 @@ select[name="name"] {
             </td>
             <td><input type="date" name="completed" /></td>
             <td><input type="text" name="comments" /></td>
+            <td><input type="date" name="validity" /></td>
           </tr>
         </table>
         <br>
@@ -290,7 +347,7 @@ select[name="name"] {
         <br>
         <input type="submit" value="Delete Records">
       </form>
-    </div>
+    </div>    
     <div class="register-user-form-container">
       <form class="register-user-form" method="POST" action="/register">
         <table class="excel-table">
@@ -307,41 +364,47 @@ select[name="name"] {
         <input type="submit" value="Register">
     </div>
     <table class="excel-table">
-      <tr>
-        <th>Name</th>
-        <th>Certification</th>
-        <th>Planned</th>
-        <th>Registered</th>
-        <th>Cleared</th>
-        <th>Completion Date</th>
-        <th>Comments</th>
-      </tr>
-      <% var group = {}; %>
-      <% devices.forEach(function(device) {
-            if (!group[device.name]) {
-                group[device.name] = [];
-            }
-            group[device.name].push(device);
-         });
-         Object.keys(group).forEach(function(name) { %>
-         <tr>
-            <td rowspan="<%= group[name].length %>"><%= name %></td>
-            <% group[name].forEach(function(device, index) { %>
-                <% if (index > 0) { %>
-                <tr>
-                <% } %>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.certification %></td>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.registered %></td>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.cleared %></td>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.completed) { %><%= new Date(device.completed).toLocaleDateString() %><% } else { %>-<% } %></td>
-                <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.comments %></td>
-                <% if (index > 0) { %>
-                </tr>
-                <% } %>
-            <% }); %>
-         </tr>
-      <% }); %>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Certification</th>
+          <th>Planned</th>
+          <th>Registered</th>
+          <th>Cleared</th>
+          <th>Completion Date</th>
+          <th>Comments</th>
+          <th>Validity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var group = {}; %>
+        <% devices.forEach(function(device) {
+              if (!group[device.name]) {
+                  group[device.name] = [];
+              }
+              group[device.name].push(device);
+           });
+           Object.keys(group).forEach(function(name) { %>
+           <tr>
+              <td rowspan="<%= group[name].length %>"><%= name %></td>
+              <% group[name].forEach(function(device, index) { %>
+                  <% if (index > 0) { %>
+                  <tr>
+                  <% } %>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.certification %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.planned) { %><%= new Date(device.planned).toLocaleDateString() %><% } else { %>-<% } %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.registered %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.cleared %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.completed) { %><%= new Date(device.completed).toLocaleDateString() %><% } else { %>-<% } %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><%= device.comments %></td>
+                  <td class="clickable-cell" data-deviceid="<%= device._id %>"><% if (device.validity) { %><%= new Date(device.validity).toLocaleDateString() %><% } else { %>-<% } %></td>
+                  <% if (index > 0) { %>
+                  </tr>
+                  <% } %>
+              <% }); %>
+           </tr>
+        <% }); %>
+      </tbody>
     </table>
     
     <script>

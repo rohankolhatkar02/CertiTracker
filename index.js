@@ -17,6 +17,7 @@ const nameSchema = new mongoose.Schema({
 
 
 const Name = mongoose.model('Name', nameSchema);
+const CertificationName = require('./certificationName');
 
 const client = new MongoClient(url);
 const assert = require('assert');
@@ -143,6 +144,7 @@ app.post("/add",(req,res)=>{
   var cleared = req.body.cleared === "yes" ? "yes" : "no";
   var completed = req.body.completed;
   var comments = req.body.comments;
+  var validity = req.body.validity;
 
   var data = {
     "name": name,
@@ -152,6 +154,7 @@ app.post("/add",(req,res)=>{
     "cleared": cleared,
     "completed": completed,
     "comments": comments,
+    "validity": validity,
   }
 
   db.collection('newcert').insertOne(data,(err,collection)=>{
@@ -176,6 +179,7 @@ app.get('/devices', function(req, res) {
       }
   });
 });
+
 
 
 /*Update function*/
@@ -205,6 +209,10 @@ app.post("/update", function(req, res) {
 
   if (req.body.comments) {
     updateFields.comments = req.body.comments;
+  }
+
+  if (req.body.validity) {
+    updateFields.validity = req.body.validity;
   }
 
   var name = req.body.name;
@@ -252,6 +260,7 @@ app.post('/devices/:id', async (req, res) => {
     if (req.body.cleared) updateFields.cleared = req.body.cleared;
     if (req.body.completed) updateFields.completed = req.body.completed;
     if (req.body.comments) updateFields.comments = req.body.comments;
+    if (req.body.validity) updateFields.validity = req.body.validity;
 
     await MyModel.updateOne({ _id: device._id }, { $set: updateFields });
   } catch (error) {
@@ -302,6 +311,18 @@ app.post("/delete", function(req, res, next){
   }
 });
 
+app.get('/delete', async (req, res) => {
+  try {
+    // fetch all the names from the "names" collection in MongoDB
+    const names = await Name.find({});
+    // fetch all the certification names from the "certificationnames" collection in MongoDB
+    const certificationNames = await CertificationName.find({});
+    res.render('delete', { names, certificationNames });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 // create a route to handle AJAX requests for names
 app.get('/names', async (req, res) => {
@@ -310,6 +331,19 @@ app.get('/names', async (req, res) => {
     const names = await Name.find({});
     // send the names to the client-side
     res.send(names);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// create a route to handle AJAX requests for Certifications
+app.get('/certificationnames', async (req, res) => {
+  try {
+    // fetch all the certification names from MongoDB
+    const certificationNames = await CertificationName.find({});
+    // send the certification names to the client-side
+    res.send(certificationNames);
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal Server Error');
